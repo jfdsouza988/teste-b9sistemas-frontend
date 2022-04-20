@@ -1,8 +1,6 @@
 import React from 'react';
 import {
   MdDelete,
-  MdAddCircleOutline,
-  MdRemoveCircleOutline,
 } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import { IState } from '../../store';
@@ -13,7 +11,7 @@ import { Container, ProductTable, Total } from './styles';
 
 export default function Cart() {
   const cart = useSelector<IState, ICartItem[]>(state => state.cart.items);
-
+  
   return (
     <Container>
       <ProductTable>
@@ -69,7 +67,7 @@ export default function Cart() {
 
         <Total>
           <span>TOTAL</span>
-          <strong>R$ 359,80</strong>
+          <strong>R$ 379,90</strong>
         </Total>
       </footer>
     </Container>
