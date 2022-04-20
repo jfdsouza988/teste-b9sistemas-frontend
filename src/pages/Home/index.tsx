@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react';
 import ProductList from '../../components/ProductList';
 import api from '../../services/api';
 import { IProduct } from '../../store/modules/cart/types';
+import { Container } from './styles';
 
-export default function Home() {  
-  const [products, setProducts] = useState<IProduct[]>([]);  
+export default function Home() {
+  const [products, setProducts] = useState<IProduct[]>([]);
 
   useEffect(() => {
     async function loadProducts() {
@@ -19,9 +20,11 @@ export default function Home() {
 
   return (
     <>
-      {products.map(product => (
-        <ProductList key={product.id} product={product}/>        
-      ))}
+      <Container>
+        {products.map(product => (
+          <ProductList product={product} />
+        ))}
+      </Container>
     </>
   );
 };

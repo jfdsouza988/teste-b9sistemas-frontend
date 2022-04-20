@@ -35,26 +35,26 @@ function ProductList({ product }: CatalogItemProps) {
 
   return (
     <Container>
-      <li>
-        <img src={defaultImage} alt="Clothes" />
-        <strong>{product.title}</strong>
-        <span>{formatPrice(product.price)}</span>
-        <button
-          type="button"
-          data-testid="add-product-button"
-          onClick={handleAddProductToCart}
-        >
-          <div data-testid="cart-product-quantity">
-            <>
-              <MdAddShoppingCart size={16} color="#FFF" />
-              {cartItemsAmount(product.id)}
-            </>
-          </div>
 
-          <span>ADICIONAR AO PEDIDO</span>
-        </button>
-      </li>
-      { hasFailedStockCheck && toast.error('Quantidade solicitada fora de estoque')}
+      <img src={defaultImage} alt="imagem ilustrativa padrão" />
+      <strong>{product.title}</strong>
+      <span>{formatPrice(product.price)}</span>
+      <button
+        type="button"
+        data-testid="add-product-button"
+        onClick={handleAddProductToCart}
+      >
+        <div data-testid="cart-product-quantity">
+          <>
+            <MdAddShoppingCart size={16} color="#FFF" />
+            {cartItemsAmount(product.id)}
+          </>
+        </div>
+
+        <span>ADICIONAR AO PEDIDO</span>
+      </button>
+
+      {hasFailedStockCheck && toast.error('Quantidade solicitada fora de estoque')}
     </Container>
   )
 }
