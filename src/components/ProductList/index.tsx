@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { MdAddShoppingCart } from 'react-icons/md';
+import { MdAddShoppingCart, MdDelete, MdMode } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -10,6 +10,7 @@ import { formatPrice } from '../../utils/format';
 import { Container } from './styles';
 
 import defaultImage from '../../assets/images/clothes.jpg';
+import api from '../../services/api';
 
 interface CatalogItemProps {
   product: IProduct;
@@ -33,29 +34,60 @@ function ProductList({ product }: CatalogItemProps) {
     dispatch(addProductToCartRequest(product));
   }, [dispatch, product]);
 
-  return (
-    <Container>
+  async function handleDeleteProduct(productId: string) {
+    try {      
+      await api.delete(`product/${productId}`).then(() => {
+        toast.success('Produto removido com sucesso');
+      });
+    } catch (err: any) {
+      toast.error(err.response.data?.message);
+    }
+  }
 
-      <img src={defaultImage} alt="imagem ilustrativa padrão" />
-      <strong>{product.title}</strong>
-      <span>{formatPrice(product.price)}</span>
-      <button
-        type="button"
-        data-testid="add-product-button"
-        onClick={handleAddProductToCart}
-      >
-        <div data-testid="cart-product-quantity">
-          <>
-            <MdAddShoppingCart size={16} color="#FFF" />
-            {cartItemsAmount(product.id)}
-          </>
+  return (
+    <>
+      <Container>
+        <img src={defaultImage} alt="Imagem ilustrativa padrão" />
+        <strong>{product.title}</strong>
+        <span>{formatPrice(product.price)}</span>
+        <div className="action-buttons">
+          <button
+            className="add-button"
+            type="button"
+            data-testid="add-product-button"
+            onClick={handleAddProductToCart}
+          >
+            <div data-testid="cart-product-quantity">
+              <>
+                <MdAddShoppingCart size={16} color="#FFF" />
+                {cartItemsAmount(product.id)}
+              </>
+            </div>
+
+            <span>ADICIONAR AO PEDIDO</span>
+          </button>
+
+          <button
+            type="button"
+            data-testid="update-product"
+          //onClick={() => console.log('remover o produto')}
+          >
+            <MdMode size={20} />
+          </button>
+
+          <button
+            type="button"
+            data-testid="remove-product"
+            onClick={() => handleDeleteProduct(product.id)}
+          >
+            <MdDelete size={20} />
+          </button>
+
         </div>
 
-        <span>ADICIONAR AO PEDIDO</span>
-      </button>
-
-      {hasFailedStockCheck && toast.error('Quantidade solicitada fora de estoque')}
-    </Container>
+        {hasFailedStockCheck && toast.error('Quantidade solicitada fora de estoque')}
+      </Container>      
+    </>
   )
 }
 

@@ -19,7 +19,7 @@ export default function Header() {
 
       <Cart to="/cart">
         <div>
-          <strong>Meu pedido</strong>
+          <strong>Ver pedido</strong>
           <span data-testid="cart-size">
             {cartSize === 1 ? `${cartSize} item` : `${cartSize} itens`}
           </span>

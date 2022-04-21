@@ -9,6 +9,8 @@ import { formatPrice } from '../../utils/format';
 
 import { Container, ProductTable, Total } from './styles';
 
+import defaultImage from '../../assets/images/clothes.jpg';
+
 export default function Cart() {
   const cart = useSelector<IState, ICartItem[]>(state => state.cart.items);
   
@@ -28,7 +30,7 @@ export default function Cart() {
           {cart.map(item => (
             <tr key={item.product.id} data-testid="product">
               <td>
-                <img src="https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg" alt="Tênis de Caminhada Leve Confortável" />
+                <img src={defaultImage} alt="Imagem ilustrativa padrão" />
               </td>
               <td>
                 <strong>{item.product.title}</strong>
