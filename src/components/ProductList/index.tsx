@@ -12,6 +12,7 @@ import { Container } from './styles';
 import defaultImage from '../../assets/images/clothes.jpg';
 import api from '../../services/api';
 import { MessageModal } from '../Modals/Message';
+import { UpdateProductModal } from '../Modals/updateProduct';
 
 interface CatalogItemProps {
   product: IProduct;
@@ -19,9 +20,19 @@ interface CatalogItemProps {
 
 function ProductList({ product }: CatalogItemProps) {
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+  const [isUpdateProductModalOpen, setIsUpdateProductModalOpen] = useState(false);
   const [message, setMessage] = useState('');
   const cart = useSelector<IState, ICartItem[]>(state => state.cart.items);
   const dispatch = useDispatch();
+
+
+  function handleOpenUpdateProductModal() {
+    setIsUpdateProductModalOpen(true);
+  }
+
+  function handleCloseUpdateProductModal() {
+    setIsUpdateProductModalOpen(false);
+  }
 
   function cartItemsAmount(productId: string): Number {
     const quantity: number = cart.find(item => item.product.id === productId)?.quantity ?? 0;
@@ -48,7 +59,7 @@ function ProductList({ product }: CatalogItemProps) {
       setMessage(err.response.data?.message);
     }).finally(() => {
       setIsMessageModalOpen(true);
-    })    
+    })
   }
 
   function handleCloseMessageModal() {
@@ -81,7 +92,7 @@ function ProductList({ product }: CatalogItemProps) {
           <button
             type="button"
             data-testid="update-product"
-            onClick={() => console.log('alterar o produto')}
+            onClick={handleOpenUpdateProductModal}
           >
             <MdMode size={20} />
           </button>
@@ -94,6 +105,12 @@ function ProductList({ product }: CatalogItemProps) {
             <MdDelete size={20} />
           </button>
         </div>
+
+        <UpdateProductModal
+          product={product}
+          isOpen={isUpdateProductModalOpen}
+          onRequestClose={handleCloseUpdateProductModal}
+        />
       </Container>
 
       <MessageModal
