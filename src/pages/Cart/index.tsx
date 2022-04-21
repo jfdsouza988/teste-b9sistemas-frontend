@@ -17,6 +17,10 @@ export default function Cart() {
   const dispatch = useDispatch();
   const cart = useSelector<IState, ICartItem[]>(state => state.cart.items);
 
+  const cartTotalPrice = useSelector<IState, number>(state => {
+    return state.cart.items.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
+  });
+
   const handleDeleteProductFromCart = useCallback((productId: string) => {   
     dispatch(removeProductFromCart(productId));
   }, [dispatch]);
@@ -76,7 +80,7 @@ export default function Cart() {
 
         <Total>
           <span>TOTAL</span>
-          <strong>R$ 379,90</strong>
+          <strong>{formatPrice(cartTotalPrice)}</strong>
         </Total>
       </footer>
     </Container>
