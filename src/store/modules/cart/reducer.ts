@@ -32,6 +32,14 @@ const cart: Reducer<ICartState> = (state = INITIAL_STATE, action) => {
         draft.failedStockCheck.push(action.payload.productId);
         break;
       }
+      case ActionsTypes.removeProductFromCart: {
+        const productInCartIndex = draft.items.findIndex(item =>
+          item.product.id === action.payload.productId,
+        );
+        draft.items.splice(productInCartIndex, 1);
+               
+        break;
+      }
       default: {
         return draft;
       }

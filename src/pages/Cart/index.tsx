@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   MdDelete,
 } from 'react-icons/md';
@@ -10,9 +10,16 @@ import { formatPrice } from '../../utils/format';
 import { Container, ProductTable, Total } from './styles';
 
 import defaultImage from '../../assets/images/clothes.jpg';
+import { removeProductFromCart } from '../../store/modules/cart/actions';
+import { useDispatch } from 'react-redux';
 
 export default function Cart() {
+  const dispatch = useDispatch();
   const cart = useSelector<IState, ICartItem[]>(state => state.cart.items);
+
+  const handleDeleteProductFromCart = useCallback((productId: string) => {   
+    dispatch(removeProductFromCart(productId));
+  }, [dispatch]);
   
   return (
     <Container>
@@ -53,7 +60,7 @@ export default function Cart() {
                 <button
                   type="button"
                   data-testid="remove-product"
-                // onClick={() => handleRemoveProduct(product.id)}
+                  onClick={() => handleDeleteProductFromCart(item.product.id)}
                 >
                   <MdDelete size={20} />
                 </button>

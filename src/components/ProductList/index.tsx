@@ -30,12 +30,15 @@ function ProductList({ product }: CatalogItemProps) {
     return state.cart.failedStockCheck.includes(product.id);
   });
 
-  const handleAddProductToCart = useCallback(() => {
+  const handleAddProductToCart = useCallback((product: IProduct) => {
+    if(hasFailedStockCheck) {
+      toast.error('Quantidade solicitada fora de estoque');
+    }
     dispatch(addProductToCartRequest(product));
-  }, [dispatch, product]);
+  }, [dispatch, hasFailedStockCheck]);
 
   async function handleDeleteProduct(productId: string) {
-    try {      
+    try {
       await api.delete(`product/${productId}`).then(() => {
         toast.success('Produto removido com sucesso');
       });
@@ -55,7 +58,7 @@ function ProductList({ product }: CatalogItemProps) {
             className="add-button"
             type="button"
             data-testid="add-product-button"
-            onClick={handleAddProductToCart}
+            onClick={() => handleAddProductToCart(product)}
           >
             <div data-testid="cart-product-quantity">
               <>
@@ -63,14 +66,13 @@ function ProductList({ product }: CatalogItemProps) {
                 {cartItemsAmount(product.id)}
               </>
             </div>
-
             <span>ADICIONAR AO PEDIDO</span>
           </button>
 
           <button
             type="button"
             data-testid="update-product"
-          //onClick={() => console.log('remover o produto')}
+            onClick={() => console.log('alterar o produto')}
           >
             <MdMode size={20} />
           </button>
@@ -82,11 +84,8 @@ function ProductList({ product }: CatalogItemProps) {
           >
             <MdDelete size={20} />
           </button>
-
         </div>
-
-        {hasFailedStockCheck && toast.error('Quantidade solicitada fora de estoque')}
-      </Container>      
+      </Container>
     </>
   )
 }
