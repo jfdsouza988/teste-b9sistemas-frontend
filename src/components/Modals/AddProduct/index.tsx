@@ -7,7 +7,8 @@ import CurrencyInput from 'react-currency-input-field';
 import { ButtonContainer, Content, Form, Label } from './styles';
 import api from '../../../services/api';
 import { Button } from '../../Form/Button';
-import { toast } from 'react-toastify';
+import { MessageModal } from '../Message';
+import { useState } from 'react';
 
 interface AddProductModalModalProps {
   isOpen: boolean;
@@ -31,6 +32,9 @@ export function AddProductModal({
   onRequestClose,
 }: AddProductModalModalProps) {
 
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+  const [message, setMessage] = useState('');
+
   const {
     register,
     handleSubmit,
@@ -44,7 +48,7 @@ export function AddProductModal({
       price: parseFloat(values.price),
       quantity: parseInt(values.quantity)
     };
-    
+
     await api
       .post('product', {
         title: data.title,
@@ -52,64 +56,78 @@ export function AddProductModal({
         price: data.price,
       })
       .then(() => {
-        toast.success('Produto cadastrado com sucesso');
+        setMessage('Produto cadastrado com sucesso');
       }).catch((err: any) => {
-        toast.error(err.response.data?.message);
+        setMessage(err.response.data?.message);
       }).finally(() => {
         onRequestClose();
+        setIsMessageModalOpen(true);
       });
   };
 
+  function handleCloseMessageModal() {
+    setIsMessageModalOpen(false);
+    window.location.reload();
+  }
+
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
-      overlayClassName="react-modal-overlay"
-      className="react-modal-content"
-    >
-      <Content>
-        <h2>Cadastrar novo produto</h2>
-      </Content>
-      <Form onSubmit={handleSubmit(handleAddNewProduct)}>
-        <Input
-          id="title"
-          type="text"
-          label="Descrição"
-          error={errors.title}
-          {...register("title")}
-          placeholder="Digite a descriçao do produto..."
-        />
-
-        <Input
-          id="quantity"
-          type="number"
-          label="Quantidade"
-          error={errors.quantity}
-          {...register("quantity")}
-          placeholder="Digite a quantidade do produto..."
-        />
-
-        <Label>Preço</Label>
-        <CurrencyInput
-          id="price"
-          type="text"
-          {...register("price")}
-          placeholder="39.90"
-          decimalSeparator="."
-          decimalScale={2}
-          fixedDecimalLength={2}
-          disableGroupSeparators={true}
-          allowNegativeValue={false}
-        />
-        <ButtonContainer>
-          <Button type="button" label="Cancelar" onClick={onRequestClose} />
-          <Button
-            type="submit"
-            label="Cadastrar"
-            isLoading={formState.isSubmitting}
+    <>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={onRequestClose}
+        overlayClassName="react-modal-overlay"
+        className="react-modal-content"
+      >
+        <Content>
+          <h2>Cadastrar novo produto</h2>
+        </Content>
+        <Form onSubmit={handleSubmit(handleAddNewProduct)}>
+          <Input
+            id="title"
+            type="text"
+            label="Descrição"
+            error={errors.title}
+            {...register("title")}
+            placeholder="Digite a descriçao do produto..."
           />
-        </ButtonContainer>
-      </Form>
-    </Modal>
+
+          <Input
+            id="quantity"
+            type="number"
+            label="Quantidade"
+            error={errors.quantity}
+            {...register("quantity")}
+            placeholder="Digite a quantidade do produto..."
+          />
+
+          <Label>Preço</Label>
+          <CurrencyInput
+            id="price"
+            type="text"
+            {...register("price")}
+            placeholder="39.90"
+            decimalSeparator="."
+            decimalScale={2}
+            fixedDecimalLength={2}
+            disableGroupSeparators={true}
+            allowNegativeValue={false}
+          />
+          <ButtonContainer>
+            <Button type="button" label="Cancelar" onClick={onRequestClose} />
+            <Button
+              type="submit"
+              label="Cadastrar"
+              isLoading={formState.isSubmitting}
+            />
+          </ButtonContainer>
+        </Form>
+      </Modal>
+
+      <MessageModal
+        isOpen={isMessageModalOpen}
+        onRequestClose={handleCloseMessageModal}
+        message={message}
+      />
+    </>
   );
 }

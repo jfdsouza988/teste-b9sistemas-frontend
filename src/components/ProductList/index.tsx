@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { MdAddShoppingCart, MdDelete, MdMode } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -11,12 +11,15 @@ import { Container } from './styles';
 
 import defaultImage from '../../assets/images/clothes.jpg';
 import api from '../../services/api';
+import { MessageModal } from '../Modals/Message';
 
 interface CatalogItemProps {
   product: IProduct;
 }
 
 function ProductList({ product }: CatalogItemProps) {
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+  const [message, setMessage] = useState('');
   const cart = useSelector<IState, ICartItem[]>(state => state.cart.items);
   const dispatch = useDispatch();
 
@@ -31,20 +34,26 @@ function ProductList({ product }: CatalogItemProps) {
   });
 
   const handleAddProductToCart = useCallback((product: IProduct) => {
-    if(hasFailedStockCheck) {
+    if (hasFailedStockCheck) {
       toast.error('Quantidade solicitada fora de estoque');
     }
     dispatch(addProductToCartRequest(product));
   }, [dispatch, hasFailedStockCheck]);
 
   async function handleDeleteProduct(productId: string) {
-    try {
-      await api.delete(`product/${productId}`).then(() => {
-        toast.success('Produto removido com sucesso');
-      });
-    } catch (err: any) {
-      toast.error(err.response.data?.message);
-    }
+
+    await api.delete(`product/${productId}`).then(() => {
+      setMessage('Produto removido com sucesso');
+    }).catch((err) => {
+      setMessage(err.response.data?.message);
+    }).finally(() => {
+      setIsMessageModalOpen(true);
+    })    
+  }
+
+  function handleCloseMessageModal() {
+    setIsMessageModalOpen(false);
+    window.location.reload();
   }
 
   return (
@@ -86,6 +95,12 @@ function ProductList({ product }: CatalogItemProps) {
           </button>
         </div>
       </Container>
+
+      <MessageModal
+        isOpen={isMessageModalOpen}
+        onRequestClose={handleCloseMessageModal}
+        message={message}
+      />
     </>
   )
 }

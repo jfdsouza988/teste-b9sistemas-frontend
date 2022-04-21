@@ -21,7 +21,7 @@ export default function Home() {
 
   function handleCloseAddProductModal() {
     setIsAddProductModalOpen(false);
-  }  
+  }
 
   useEffect(() => {
     async function loadProducts() {
@@ -56,7 +56,7 @@ export default function Home() {
       <AddProductModal
         isOpen={isAddProductModalOpen}
         onRequestClose={handleCloseAddProductModal}
-      />      
+      />
     </>
   );
 };
