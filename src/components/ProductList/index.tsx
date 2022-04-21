@@ -25,7 +25,6 @@ function ProductList({ product }: CatalogItemProps) {
   const cart = useSelector<IState, ICartItem[]>(state => state.cart.items);
   const dispatch = useDispatch();
 
-
   function handleOpenUpdateProductModal() {
     setIsUpdateProductModalOpen(true);
   }
@@ -73,6 +72,7 @@ function ProductList({ product }: CatalogItemProps) {
         <img src={defaultImage} alt="Imagem ilustrativa padrão" />
         <strong>{product.title}</strong>
         <span>{formatPrice(product.price)}</span>
+        <p>{product.stock === 1 ? `${product.stock} item` : `${product.stock} itens`} em estoque</p>
         <div className="action-buttons">
           <button
             className="add-button"

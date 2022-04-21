@@ -12,11 +12,11 @@ export default function Header() {
     <Container>
       <Logo to="/">
         <div>
-          <strong>CLOTHING.STORE</strong>          
+          <strong>CLOTHING.STORE</strong>
         </div>
         <MdShoppingBag size={36} color="#FFF" />
       </Logo>
-
+      
       <Cart to="/cart">
         <div>
           <strong>Ver pedido</strong>

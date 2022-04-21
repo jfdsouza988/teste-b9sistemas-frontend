@@ -6,7 +6,7 @@ export const Container = styled.li`
     flex-direction: column;
     background: #fff;
     border-radius: 4px;
-    padding: 20px;
+    padding: 15px;
     img {
       align-self: center;
       max-width: 100%;
@@ -20,7 +20,10 @@ export const Container = styled.li`
     > span {
       font-size: 21px;
       font-weight: bold;
-      margin: 5px 0 20px;
+      margin: 2px 0;
+    }    
+    > p {      
+      margin-bottom: 8px;
     }    
 
     .action-buttons {

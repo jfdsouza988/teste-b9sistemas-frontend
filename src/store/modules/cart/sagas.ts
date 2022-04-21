@@ -9,7 +9,7 @@ type CheckProductStockRequest = ReturnType<typeof addProductToCartRequest>;
 
 interface IStockResponse {
   id: string;
-  quantity: number;
+  stock: number;
 }
 
 function* checkProductStock({ payload }: CheckProductStockRequest) {
@@ -21,7 +21,7 @@ function* checkProductStock({ payload }: CheckProductStockRequest) {
 
   const availableStockResponse: AxiosResponse<IStockResponse> = yield call(api.get, `product/${product.id}`);
 
-  if (availableStockResponse.data.quantity > currentQuantity) {
+  if (availableStockResponse.data.stock > currentQuantity) {
     yield put(addProductToCartSuccess(product));
   } else {
     yield put(addProductToCartFailure(product.id));

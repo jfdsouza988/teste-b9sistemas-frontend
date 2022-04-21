@@ -24,7 +24,6 @@ type UpdateProductFormData = {
 };
 
 const UpdateProductFormSchema = yup.object().shape({
-  title: yup.string().required('Descrição obrigatória'),
   quantity: yup.string().required('Quantidade não informada'),
   price: yup.string().required('Informe o preço do produto'),
 });
@@ -37,6 +36,8 @@ export function UpdateProductModal({
 
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
   const [message, setMessage] = useState('');
+  const [price, setPrice] = useState(String(product.price));
+  const [quantity, setQuantity] = useState<number>(product.stock);
 
   const {
     register,
@@ -47,14 +48,12 @@ export function UpdateProductModal({
 
   const handleUpdateProduct: SubmitHandler<UpdateProductFormData> = async (values) => {
     const data = {
-      title: values.title,
       price: parseFloat(values.price),
       quantity: parseInt(values.quantity)
     };
 
     await api
-      .post(`product/${product.id}`, {
-        title: data.title,
+      .patch(`product/${product.id}`, {
         quantity: data.quantity,
         price: data.price,
       })
@@ -89,10 +88,9 @@ export function UpdateProductModal({
             id="title"
             type="text"
             label="Descrição"
-            error={errors.title}
             {...register("title")}
             value={product.title}
-            placeholder="Digite a descriçao do produto..."
+            readOnly
           />
 
           <Input
@@ -101,7 +99,8 @@ export function UpdateProductModal({
             label="Quantidade"
             error={errors.quantity}
             {...register("quantity")}
-            value={product.quantity}
+            value={quantity}
+            onChange={e => setQuantity(Number(e.target.value))}
             placeholder="Digite a quantidade do produto..."
           />
 
@@ -110,11 +109,12 @@ export function UpdateProductModal({
             id="price"
             type="text"
             {...register("price")}
-            placeholder="39.90"
+            placeholder="Digite o preço do produto..."
+            value={price}
+            onChange={e => setPrice(e.target.value)}
             decimalSeparator="."
             decimalScale={2}
             fixedDecimalLength={2}
-            value={product.price}
             disableGroupSeparators={true}
             allowNegativeValue={false}
           />

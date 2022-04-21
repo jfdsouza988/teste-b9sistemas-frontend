@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Cart from './pages/Cart';
 import { persistor, store } from './store';
 import GlobalStyle from './styles/global';
+import Orders from './pages/Orders';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/orders" element={<Orders />} />
           </Routes>
         </Router>
         <ToastContainer autoClose={3000} />
